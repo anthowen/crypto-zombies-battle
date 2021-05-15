@@ -3,8 +3,7 @@
 //
 // When running the script with `hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const { ethers, upgrades } = require("hardhat");
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -15,21 +14,29 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const ZombieFactory = await ethers.getContractFactory("ZombieFactory");
+  const ZombieFeeding = await ethers.getContractFactory("ZombieFeeding");
+  const ZombieHelper = await ethers.getContractFactory("ZombieHelper");
+  const ZombieAttack = await ethers.getContractFactory("ZombieAttack");
+  const ZombieOwnership = await ethers.getContractFactory("ZombieOwnership");
 
-  await greeter.deployed();
+  const factory = await ZombieFactory.deploy();
+  const feeding = await ZombieFeeding.deploy();
+  const helper = await ZombieHelper.deploy();
+  const attack = await ZombieAttack.deploy();
+  const ownership = await ZombieOwnership.deploy();
 
-  console.log("Greeter deployed to:", greeter.address);
+  await factory.deployed();
+  await feeding.deployed();
+  await helper.deployed();
+  await attack.deployed();
+  await ownership.deployed();
 
-  // Box.sol
-  const Box = await ethers.getContractFactory("Box");
-  console.log("Deploying Box ....");
-
-  const box = await upgrades.deployProxy(Box, [42], { initializer: 'store' });
-  await box.deployed();
-
-  console.log('Box deployed to: ', box.address);
+  console.log("factory address", factory.address);
+  console.log("feeding address", feeding.address);
+  console.log("helper address", helper.address);
+  console.log("attack address", attack.address);
+  console.log("ownership address", ownership.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
